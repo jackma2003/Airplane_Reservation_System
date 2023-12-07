@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add Flight</h1>
+
+<style>
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon>i {
+        position: absolute;
+        display: block;
+        transform: translate(0, -50%);
+        top: 50%;
+        pointer-events: none;
+        width: 25px;
+        text-align: center;
+        font-style: normal;
+    }
+
+    .input-icon>input {
+        padding-left: 25px;
+        padding-right: 0;
+    }
+
+    .input-icon-right>i {
+        right: 0;
+    }
+
+    .input-icon-right>input {
+        padding-left: 0;
+        padding-right: 25px;
+        text-align: right;
+    }
+    .input {
+        padding-top: 7px;
+        padding-bottom: 3px;
+    }
+</style>
+
+<form method="POST">
+
+    <div class="container">
+        <div class="form-group">
+            <div class = 'input'> 
+                <label for="flight_number">Flight Number:</label>
+                <input type="text" id="flight_number" name="flight_number" pattern="\d*" maxlength = "11" required></div>
+            <div class = 'input'>
+                <label for="departure_airport">Departure Airport:</label>
+                <select class = "dropdown-menu" id="departure_airport" required name="departure_airport">   
+                    <option value = '' selected hidden disabled> -- </option>
+                        {% for ports in airports %}
+                        <option value = {{ports.name}}> {{ports.name}} {{ports.city}}</option>
+                        {% endfor %}
+                </select>
+            </div> 
+            <div class = 'input'>
+                <label for="arrival_airport">Arrival Airport:</label>
+                <select class = "dropdown-menu" id="arrival_airport" required name="arrival_airport">   
+                    <option value = '' selected hidden disabled> -- </option>
+                        {% for ports in airports %}
+                        <option value = {{ports.name}}> {{ports.name}} {{ports.city}}</option>
+                        {% endfor %}
+                </select>
+            </div>
+            <div class = 'input'> 
+                <label for="departure_date_time">Departure Time:</label>
+                <input required type="datetime-local" id="departure_date_time"  name="departure_date_time"></div>
+            <div class = 'input'> 
+                <label for="arrival_date_time">Arrival Time:</label>
+                <input required type="datetime-local" id="arrival_date_time" name="arrival_date_time"></div>
+            <div class = 'input'>
+                <label for = "airplane_id"> Airplane ID:</label>
+                <select id="airplane_id" name = 'airplane_id' required>
+                    <option value = '' selected hidden disabled> -- </option>
+                </select>
+            </div>
+            <div class = 'input'>
+                <label for="status">Status:</label>
+                <select name ='status' id="status" required>
+                    <option value = '' selected hidden disabled> -- </option>
+                    <option value= "on_time"> On Time </option>
+                    <option value=" delayed"> Delayed </option>
+                    <option value= "early"> Early </option>
+                </select></div>
+            <div class = "input"> 
+                <label for="price">Base Price:</label>
+                <div class="input-icon">
+                    <input required type="number" id="base_price" 
+                    placeholder="0.00" name = 'base_price'>
+                    <i>$</i>
+                </div> 
+            </div>
+            {% if error %}
+            <di>
+                <p> {{error}} </p>
+            </di>
+            {% endif %}
+        </div>
+        <input type="submit" value="Submit">
+</form>
+
+<script>
+    var planes = '{{planes | tojson}}'; 
+    planes = JSON.parse(planes);
+    const ob = document.getElementById("airplane_id");
+    console.log(planes);
+    console.log(typeof(planes));
+
+    for (var plane of Object.values(planes)){
+        console.log(plane);
+        var option = document.createElement("OPTION");
+        option.value = plane['id']
+        console.log(option.value);
+        option.text = plane['id'];
+        console.log(option.text);
+        ob.appendChild(option);
+    }
+</script>
+
+{% endblock %}

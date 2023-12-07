@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+<style>
+	label {
+		font-size: 12px;
+	}
+</style>
+<form action="/register" method="POST">
+	<select name="role" id="role" onchange="toggleRole(this)">
+		<option value="customer">Customer</option>
+		<option value="staff">Staff</option>
+	</select>
+	<input type="text" name="username" id="username" placeholder="Username (Staff only)" style="display: none;"/>
+	<input type="password" name="password" placeholder="Password" required style="text-align: center;"/>
+	<input type="email" name="email" required id = 'email' placeholder="Email"  style="text-align: center"/>
+	<input type="text" name="first_name" id="first_name" placeholder="First Name (Staff only)" style="display: none;"/>
+	<input type="text" name="last_name" id="last_name" placeholder="Last Name (Staff only)" style="display: none;"/>
+	<input type="text" name="airline_name" id="airline_name" placeholder="Airline Name (Staff only)" style="display: none;"/>
+    <label for = 'date_of_birth_staff', style="display: none;"> Date of Birth </label> 
+	<input type="date" name="date_of_birth_staff" id="date_of_birth_staff" placeholder="DOB(Staff only)" style="display: none;"/>
+
+	<div id="phone_numbers_staff" style="display: none;">
+		<input type="tel" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>
+	    <button type="button" onclick="addPhoneNumber()">Add Phone Number</button>
+	    <button type="button" onclick="removePhoneNumber()" style="display: none;" id="remove_phone_number">Remove Phone Number</button>
+    </div>
+	<input type="text" name="name" id="name" placeholder="Name (Customer only)" style="display: block;"/>
+	<input type="number" name="building_number" id="building_number" placeholder="Building Number (Customer only)" style="display: block;"/>
+	<input type="text" name="street" id="street" placeholder="Street (Customer only)" style="display: block;"/>
+	<input type="text" name="city" id="city" placeholder="City (Customer only)" style="display: block;"/>
+	<input type="text" name="state" id="state" placeholder="State (Customer only)" style="display: block;"/>
+	<input type="tel" name="phone_number" id="phone_number" placeholder="Phone Number (Customer only)" style="display: block;"/>
+	<input type="text" name="passport_number" id="passport_number" placeholder="Passport Number (Customer only)" style="display: block;"/>
+	<label for = 'passport_expiration', id = 'exp label'> Passport Expir. Date </label>
+	<input type="date" name="passport_expiration" id="passport_expiration" placeholder="Passport Expiration (Customer only)" style="display: block;"/>
+	<input type="text" name="passport_country" id="passport_country" placeholder="Passport Country (Customer only)" style="display: block;"/>
+	<label for = 'date_of_birth', id ='dob label', style> Date of Birth </label>
+	<input type="date" name="date_of_birth" id="date_of_birth" placeholder="Date of Birth" style="display: block;"/>
+	<input type="submit" value="Register" style="text-align: center;"/>
+	<script>toggleRole('role');</script>
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
+</form>
+<a href="/">Go back</a>
+
+<script>
+	function toggleRole(roleElement) {
+		var role = roleElement.value;
+		var isCustomer = role === 'customer';
+		document.getElementById('username').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('first_name').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('last_name').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('airline_name').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('phone_numbers_staff').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('remove_phone_number').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('name').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('building_number').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('street').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('city').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('state').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('phone_number').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('passport_number').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('passport_expiration').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('passport_country').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('date_of_birth').style.display = isCustomer ? 'block' : 'none';
+        document.getElementById('date_of_birth_staff').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('exp label').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('dob label').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('airline_name').required = isCustomer ? 'false' : 'true';
+		document.getElementById('username').required = isCustomer ? 'false' : 'true';
+		document.getElementById('email').required = isCustomer ? 'true' : 'false';
+
+
+	}
+
+	function addPhoneNumber() {
+		var div = document.createElement('div');
+		div.innerHTML = '<input type="tel" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>';
+		document.getElementById('phone_numbers_staff').appendChild(div);
+	}
+
+	function removePhoneNumber() {
+		const phoneNumbersDiv = document.getElementById('phone_numbers_staff');
+		if (phoneNumbersDiv.children.length > 1) {
+			phoneNumbersDiv.removeChild(phoneNumbersDiv.lastChild);
+		}
+
+	}
+</script>
+</body>
+</html>
+{% endblock %}
